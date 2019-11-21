@@ -154,20 +154,25 @@ const VoteListItem = (props: VoteListItemProps) => {
                     <Scrollbars>
                     {optionsBlock}
                     {isStart && !isEnd && props.data.myVote.length === 0 ? <Button type={'primary'} onClick={(): void => {
-                        setLoading(true);
-                        _voteService.postMyVoteById(props.data.id, {
-                            optionId: selectNum
-                        }, (res: any) => {
-                            success('投票成功');
-                            setLoading(false);
-                            dispatch({
-                                type: 'change votelist total',
-                                total: total + 1
+                        if(selectNum.length !== 0){
+                            setLoading(true);
+                            _voteService.postMyVoteById(props.data.id, {
+                                optionId: selectNum
+                            }, (res: any) => {
+                                success('投票成功');
+                                setLoading(false);
+                                dispatch({
+                                    type: 'change votelist total',
+                                    total: total + 1
+                                });
+                            }, (err: any) => {
+                                error(err && err.message ? err.message : err.toString());
+                                setLoading(false);
                             });
-                        }, (err: any) => {
-                            error(err && err.message ? err.message : err.toString());
-                            setLoading(false);
-                        });
+                        }else{
+                            error('请勾选投票项！');
+                        }
+
                     }}>投票</Button> : null}
                     </Scrollbars>
                 </VoteListItemContentCol>

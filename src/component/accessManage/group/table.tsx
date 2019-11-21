@@ -1,22 +1,32 @@
-import React, {Fragment} from 'react';
-import {Button, Table, Popconfirm} from 'antd';
-import {TableRowSelection} from "antd/lib/table";
-import {CSSTransition} from "react-transition-group";
-import {ContentWrapper} from "@/component/meeting/meetingList/ui";
+import React, { Fragment} from 'react';
+import { Button, Table, } from 'antd';
+import { TableRowSelection } from "antd/lib/table";
+import { CSSTransition } from "react-transition-group";
+import { ContentWrapper } from "@/component/meeting/meetingList/ui";
 
-import {useDispatch, useMappedState} from 'redux-react-hook';
+import { useDispatch, useMappedState } from 'redux-react-hook';
 
-import {ListObjects} from '@/store/access/groupList';
+import { ListObjects } from '@/store/access/groupList';
 
-import {IState} from '@/store';
+import { IState } from '@/store';
+
+import AccessServices from '@/services/accessServices';
+const _accessServices = new AccessServices();
+import { success, error, waringConfirm, } from '@/util/golbalModalMessage';
 
 const mapState = (state: IState): {
     list: ListObjects[] | undefined;
+    listLimit: number;
     selectRows: string[];
+    listtotal: number;
+    listSearch: any;
 } => {
     return {
         list: state.AccessGroup.list,
-        selectRows: state.AccessGroup.selectRows
+        listLimit: state.AccessGroup.limit,
+        selectRows: state.AccessGroup.selectRows,
+        listtotal: state.AccessGroup.total,
+        listSearch: state.AccessGroup.search,
     };
 };
 
@@ -24,8 +34,33 @@ const GroupTable: React.ComponentType = () => {
     const dispatch = useDispatch();
     const {
         list,
-        selectRows
+        selectRows,
+        listSearch,
+        listLimit,
     } = useMappedState(mapState);
+
+    const delgroup = (id: string) => {
+        _accessServices.deviceGroupDel({ ids: id }, (res: any) => {
+            success(`删除设备组成功！`);
+            _accessServices.deviceGroupList({
+                page: 1,
+                pagesize: listLimit,
+                name: listSearch
+            }, (data: any) => {
+                dispatch({
+                    type: 'change accessGroup list',
+                    list: data.data.list,
+                    page: 1,
+                    total: data.data.count,
+                    limit: listLimit
+                });
+            }, (err: any) => {
+                console.log(err);
+            });
+        }, (err: any) => {
+            error(err.message.toString());
+        });
+    };
 
     const rowSelection: TableRowSelection<ListObjects> = {
         onChange: (selectedRowKeys) => {
@@ -55,8 +90,8 @@ const GroupTable: React.ComponentType = () => {
         },
         {
             title: '编辑时间',
-            dataIndex: 'updateTime',
-            key: 'updateTime'
+            dataIndex: 'updated_time',
+            key: 'updated_time'
         },
         {
             title: '操作',
@@ -64,16 +99,18 @@ const GroupTable: React.ComponentType = () => {
             render: (text: string | undefined, record: ListObjects, index: number): React.ReactElement => {
                 return (
                     <span>
-                        <Button size={"small"} style={{marginRight: 10}} onClick={(): void => {
+                        <Button size={"small"} style={{ marginRight: 10 }} onClick={(): void => {
                             dispatch({
                                 type: 'change accessGroupEditor show',
-                                userTypeId: record.id,
+                                groupId: record.id,
                                 editorType: 'edit'
                             });
                         }} type={"primary"} key={index}>编辑</Button>
-                        <Popconfirm title={`确定删除“${record.name}”吗`} okText="确定" cancelText="取消">
-                            <Button size={"small"} type={"danger"}>删除</Button>
-                        </Popconfirm>
+                        <Button type={"danger"} onClick={(): void => {
+                            waringConfirm('警告', `确定删除${record.name}设备组吗？`, () => {
+                                delgroup(record.id);
+                            });
+                        }} size={"small"}>删除</Button>
                     </span>
                 );
             }
@@ -89,7 +126,7 @@ const GroupTable: React.ComponentType = () => {
             >
                 <ContentWrapper>
                     <Table rowSelection={rowSelection} rowKey={(record: ListObjects): string => record.id}
-                           dataSource={list} pagination={false} columns={columns}/>
+                        dataSource={list} pagination={false} columns={columns} />
                 </ContentWrapper>
             </CSSTransition>
         </Fragment>

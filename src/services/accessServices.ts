@@ -6,6 +6,61 @@ import {ListObjects as AccessPassRecordByRoom} from '@/store/access/accessPassRe
 axios.defaults.withCredentials = true;
 
 class AccessServices {
+ 
+    AdddeviceGroup(data: any, success: (data: any) => void, error: (err: Error) => void): void {
+        axios.post(`/meetingcloud/apps/accesscontrol/api/v1/deviceGroupAdd`, data).then((res) => {
+            if (res.data.code) {
+                error(res.data);
+            } else {
+                success(res.data);
+            }
+        }).catch((err) => {
+            error(err);
+        });
+    }
+
+    deviceGroupList(params: any, successCallBack: any, errorCallback: any): void {
+        axios.get(`/meetingcloud/apps/accesscontrol/api/v1/deviceGroupList`, {
+            params: {
+                ...params
+            }
+        })
+            .then(function(response) {
+                if (!response.data.code) {
+                    successCallBack(response.data);
+                } else {
+                    errorCallback(response.data);
+                }
+            })
+            .catch(function(error) {
+                errorCallback(error);
+            });
+    }
+   
+    deviceGroupDel(data: any, success: (data: any) => void, error: (err: Error) => void): void {
+        axios.post(`/meetingcloud/apps/accesscontrol/api/v1/deviceGroupDel`, data).then((res) => {
+            if (res.data.code) {
+                error(res.data);
+            } else {
+                success(res.data);
+            }
+        }).catch((err) => {
+            error(err);
+        });
+    }
+
+    deviceGroupDetail(data: any, success: (data: any) => void, error: (err: Error) => void): void {
+        axios.post(`/meetingcloud/apps/accesscontrol/api/v1/deviceGroupDetail`, data).then((res) => {
+            if (res.data.code) {
+                error(res.data);
+            } else {
+                success(res.data);
+            }
+        }).catch((err) => {
+            error(err);
+        });
+    }
+
     getUserTypeList(params: {
         search?: string;
         page?: number;

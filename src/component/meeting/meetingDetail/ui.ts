@@ -20,7 +20,7 @@ interface DetailTabsItemProps {
 
 const DetailTabsItem = styled.li`
 text-align: center;
-width: 25%;
+width: 33%;
 color: rgba(54, 56, 63, 1);
 &:hover {
   color: rgba(35, 146, 255, 1);

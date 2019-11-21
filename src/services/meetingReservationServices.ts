@@ -205,7 +205,7 @@ class MeetingReservationServices {
     }
 
     getMeetingDetailById(id: string, success: any, error: any): void {
-        axios.get(`/meetingcloud/apps/meeting/api/v1/meeting/${id}`).then((res) => {
+        axios.get(`/meetingcloud/apps/meeting/api/v1/appMeeting/${id}`).then((res) => {
             success(res.data);
         }).catch((err) => {
             error(err);

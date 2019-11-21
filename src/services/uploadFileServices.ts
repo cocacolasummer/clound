@@ -28,7 +28,7 @@ class UploadFileServices {
                 onProgress({percent: parseInt(Math.round(loaded / total * 100).toFixed(2))});
             },
         }).then((res) => {
-            success(`/meetingcloud/remote.php/webdav/${fileName}`);
+            success(`${fileName}`);
         }).catch((err) => {
             error(err);
         });

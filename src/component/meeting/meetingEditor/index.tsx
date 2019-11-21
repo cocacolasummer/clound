@@ -40,13 +40,13 @@ import {WrappedBaseMeetingResForm} from './form';
 import {WrappedBaseAgendaForm} from './agenda';
 
 interface EditorData {
-    type: string;
-    startTime: string;
-    endTime: string;
-    closeFun: any;
-    in: boolean;
-    propsAgendaCount: number;
-    editorOnExited: any;
+    type?: string;
+    startTime?: string;
+    endTime?: string;
+    closeFun?: any;
+    in?: boolean;
+    propsAgendaCount?: number;
+    editorOnExited?: any;
 }
 
 function MeetingEditor(props: EditorData): any {

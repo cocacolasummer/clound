@@ -1,11 +1,10 @@
 import React, {Fragment, useState} from 'react';
-import {Icon, Button, Table, Input} from 'antd';
+import {Button, Table, Input} from 'antd';
 import {CSSTransition} from 'react-transition-group';
 import {useMappedState, useDispatch} from "redux-react-hook";
 
 const {TextArea} = Input;
 import {MeetingStatus} from "./status";
-import {SeatImg} from '@/assert/img/meeting';
 
 import {
     ContentWrapper
@@ -150,19 +149,6 @@ const MeetingTable = () => {
             // eslint-disable-next-line react/display-name
             render: (text: any, record: any, index: number) => {
                 return `${record.detail.room.name}`;
-            }
-        },
-        {
-            title: '会议坐席',
-            dateIndex: 'hasSeat',
-            key: 'hasSeat',
-            // eslint-disable-next-line react/display-name
-            render: (text: any, record: any, index: number) => {
-                return (text.hasSeat == 1 ? <a onClick={() => {
-                    dispatch({
-                        type: 'change meetingseat show'
-                    });
-                }}><img src={SeatImg}/></a> : <Icon type="dash"/>);
             }
         },
         {

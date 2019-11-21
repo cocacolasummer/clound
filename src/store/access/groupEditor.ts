@@ -14,6 +14,9 @@ export type AccessGroupEditorAction =
     groupId: string | number | undefined;
     editorType: string;
 } | {
+    type: 'change accessGroupEditor defaultvalues';
+    data: any;
+} | {
     type: 'change accessGroupEditor unmount';
     mount: boolean;
 } | {

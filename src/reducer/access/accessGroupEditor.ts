@@ -26,6 +26,12 @@ export default function reducer(
                 editorType: action.editorType
             };
         }
+        case "change accessGroupEditor defaultvalues": {
+            return {
+                ...state,
+                data: action.data
+            };
+        }
         case "change accessGroupEditor hide": {
             return {
                 ...state,

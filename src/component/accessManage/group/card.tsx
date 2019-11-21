@@ -1,19 +1,30 @@
 import React, {Fragment} from 'react';
 import {useDispatch, useMappedState} from 'redux-react-hook';
-import {Button, Popconfirm} from "antd";
+import {Button} from "antd";
 import {CSSTransition} from "react-transition-group";
 import {ContentWrapper} from "@/component/meeting/meetingList/ui";
 import QueueAnim from 'rc-queue-anim';
 import {IState} from "@/store";
 import {ListObjects} from '@/store/access/groupList';
 
+import { success, error, waringConfirm, } from '@/util/golbalModalMessage';
+
+import AccessServices from '@/services/accessServices';
+const _accessServices = new AccessServices();
+
 const mapState = (state: IState): {
     list: ListObjects[];
     selectRows: string[];
+    listtotal: number;
+    listSearch: any;
+    listLimit: number;
 } => {
     return {
         list: state.AccessGroup.list,
-        selectRows: state.AccessGroup.selectRows
+        selectRows: state.AccessGroup.selectRows,
+        listLimit: state.AccessGroup.limit,
+        listtotal: state.AccessGroup.total,
+        listSearch: state.AccessGroup.search,
     };
 };
 
@@ -30,7 +41,36 @@ import {
 
 const GroupCard: React.ComponentType = () => {
     const dispatch = useDispatch();
-    const {list, selectRows} = useMappedState(mapState);
+    const {
+        list,
+        selectRows, 
+        listSearch,
+        listLimit,
+    } = useMappedState(mapState);
+    const delgroup = (id: string) => {
+        _accessServices.deviceGroupDel({ ids: id }, (res: any) => {
+            success(`删除设备组成功！`);
+            _accessServices.deviceGroupList({
+                page: 1,
+                pagesize: listLimit,
+                name: listSearch
+            }, (data: any) => {
+                dispatch({
+                    type: 'change accessGroup list',
+                    list: data.data.list,
+                    page: 1,
+                    total: data.data.count,
+                    limit: listLimit
+                });
+            }, (err: any) => {
+                console.log(err);
+            });
+        }, (err: any) => {
+            error(err.message.toString());
+        });
+    };
+
+
     const groupCardItems = list.map((item, index) => {
         const hasSelected = selectRows.indexOf(item.id) !== -1;
         return (
@@ -58,24 +98,15 @@ const GroupCard: React.ComponentType = () => {
                             e.stopPropagation();
                             dispatch({
                                 type: 'change accessGroupEditor show',
-                                userTypeId: item.id,
+                                groupId: item.id,
                                 editorType: 'edit'
                             });
                         }} style={{marginRight: 10}} size={"small"}>编辑</Button>
-                        <Popconfirm title={`确定删除“${item.name}”吗`} onCancel={(e): void => {
-                            e && e.preventDefault();
-                            e && e.stopPropagation();
-                        }} okText="确定"
-                                    onConfirm={(e): void => {
-                                        e && e.preventDefault();
-                                        e && e.stopPropagation();
-                                    }}
-                                    cancelText="取消">
-                            <Button type={"danger"} onClick={(e): void => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                            }} size={"small"}>删除</Button>
-                        </Popconfirm>
+                        <Button type={"danger"} onClick={(): void => {
+                            waringConfirm('警告', `确定删除${item.name}设备组吗？`, () => {
+                                delgroup(item.id);
+                            });
+                        }} size={"small"}>删除</Button>
                     </GroupCardItemOperate>
                 </GroupCardItemInfo>
             </GroupCardItem>)

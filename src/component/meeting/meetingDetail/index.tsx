@@ -47,9 +47,7 @@ import {
 import {DetailMeetingBase} from "./base";
 import {DetailMeetingRemark} from "./remark";
 import {DetailMeetingSummary} from "./summary";
-import {DetailMeetingVote} from "./vote";
 import {DetailNormalMeetingBase} from "./normalBase";
-import {DetailVideoMeeting} from "./videoMeeting";
 
 import {
     ImgBase,
@@ -58,10 +56,6 @@ import {
     ImgRemarkActive,
     ImgSummary,
     ImgSummaryActive,
-    ImgVote,
-    ImgVoteActive,
-    ImgVideo,
-    ImgVideoActive
 } from '@/assert/img/meeting';
 import {error, success, waringConfirm, waringConfirmCustom, warning} from "@/util/golbalModalMessage";
 
@@ -99,13 +93,11 @@ const MeetingDetail = (props: MeetingDetailProps) => {
         <DetailMeetingBase key={1}/>,
         <DetailMeetingRemark key={2}/>,
         <DetailMeetingSummary key={3}/>,
-        <DetailMeetingVote key={4}/>
     ];
     const contentNormalItemArr: object[] = [
         <DetailNormalMeetingBase key={1}/>,
         <DetailMeetingRemark key={2}/>,
         <DetailMeetingSummary key={3}/>,
-        <DetailVideoMeeting key={4}/>
     ];
 
     const cancelMeeting = (id: string) => {
@@ -221,17 +213,17 @@ const MeetingDetail = (props: MeetingDetailProps) => {
         if (data.status === '5') {
             reCreate = (
                 <Button type={"primary"}
-                        onClick={() => {
-                            dispatch({
-                                type: 'open timepicker editor'
-                            });
-                            dispatch({
-                                type: 'change meetingeditor isEdit',
-                                isEdit: 'recreate',
-                                id: data.id
-                            });
-                        }}
-                        style={{marginRight: 5}}>重新发起</Button>
+                onClick={() => {
+                    dispatch({
+                        type: "change meetingeditor show"
+                    });
+                    dispatch({
+                        type: 'change meetingeditor isEdit',
+                        isEdit: 'recreate',
+                        id: data.id
+                    });
+                }}
+                style={{marginRight: 5}} size={"small"}>重新发起</Button>
             );
         }
     } else {
@@ -263,7 +255,7 @@ const MeetingDetail = (props: MeetingDetailProps) => {
         }
 
         if (data.detail && data.detail.attender.map((item: any) => item.user_id).indexOf(loginUserId) !== -1 &&
-            data.status === '3' && loginUserId !== data.creator && !data.attender_status) {
+            data.status === '3' && loginUserId !== data.creator && !data.attend_status) {
             btnGroup.push(
                 <Button type={"primary"} onClick={() => {
                     waringConfirm('警告', `确定接受会议<${data.subject}>吗？`, () => {
@@ -313,17 +305,17 @@ const MeetingDetail = (props: MeetingDetailProps) => {
         if (loginUserId === data.creator && data.status === '5') {
             reCreate = (
                 <Button type={"primary"}
-                        onClick={() => {
-                            dispatch({
-                                type: 'open timepicker editor'
-                            });
-                            dispatch({
-                                type: 'change meetingeditor isEdit',
-                                isEdit: 'recreate',
-                                id: data.id
-                            });
-                        }}
-                        style={{marginRight: 5}} size={"small"}>重新发起</Button>
+                onClick={() => {
+                    dispatch({
+                        type: "change meetingeditor show"
+                    });
+                    dispatch({
+                        type: 'change meetingeditor isEdit',
+                        isEdit: 'recreate',
+                        id: data.id
+                    });
+                }}
+                style={{marginRight: 5}} size={"small"}>重新发起</Button>
             );
         }
     }
@@ -390,24 +382,6 @@ const MeetingDetail = (props: MeetingDetailProps) => {
                                                 <img src={tabsSelect !== 3 ? ImgSummary : ImgSummaryActive} alt=""/>
                                             </DetailTabsImgWrap>
                                             <strong>会议纪要</strong>
-                                        </DetailTabsItem>
-                                        <DetailTabsItem
-                                            type={tabsSelect === 4 ? 'active' : ''}
-                                            onClick={(e) => setTabsSelect(4)}
-                                        >
-                                            <DetailTabsImgWrap>
-                                                {
-                                                    props.type === 'normal' ?
-                                                        <img src={tabsSelect !== 4 ? ImgVideo : ImgVideoActive}
-                                                             alt=""/> :
-                                                        <img src={tabsSelect !== 4 ? ImgVote : ImgVoteActive} alt=""/>
-                                                }
-
-                                            </DetailTabsImgWrap>
-                                            {
-                                                props.type === 'normal' ? <strong>视频会议终端</strong> :
-                                                    <strong>会议表决</strong>
-                                            }
                                         </DetailTabsItem>
                                     </DetailTabs>
                                     <DetailContent>

@@ -156,7 +156,7 @@ const MeetingRecord = (props: MeetingListProps) => {
                         <Form layout="inline">
                             <Form.Item>
                                 <Button target={"_blank"}
-                                        href={`/meetingcloud/apps/meeting/api/v1/meetingListNew?isExport=true&date=${encodeURIComponent(date.join('~'))}`}
+                                        href={`/meetingcloud/apps/meeting/api/v1/meetingListNew?isExport=true&page=-1&date=${encodeURIComponent(date.join('~'))}`}
                                         type={"primary"}>导出Excel</Button>
                             </Form.Item>
                         </Form>

@@ -17,7 +17,7 @@ const dataList = groupList.data;
 function getAccessGroupList() {
     return (req, res) => {
         const page = req.query.page || 1;
-        const limit = req.query.limit || 8;
+        const limit = req.query.limit || 10;
         const search = req.query.search || undefined;
         let data = dataList;
         if(search) {

@@ -109,6 +109,7 @@ function MeetingNormalEditor(props: EditorData): any {
     };
     const saveData = (force?: number): void => {
         const validateArr: boolean[] = [];
+        const outArr: any = [];
         const data = {};
         baseFormWrapper.validateFields((err: any, values: any) => {
             if (!err) {
@@ -117,9 +118,9 @@ function MeetingNormalEditor(props: EditorData): any {
                 data['endTime'] = `${values.meeting_date.format('YYYY-MM-DD')} ${values.meeting_time.end.format('HH:mm')}`;
                 data['roomId'] = values.address;
                 data['meeting_type'] = 0;
-                data['leaders'] = values.chairperson.map((item: string): string => {
+                data['leaders'] = values.chairperson ? values.chairperson.map((item: string): string => {
                     return item.split(':')[0];
-                });
+                }) : [];
 
                 validateArr.push(true);
             } else {
@@ -132,7 +133,12 @@ function MeetingNormalEditor(props: EditorData): any {
                 data['attenders'] = values.attend.map((item: string): string => {
                     return item.split(':')[0];
                 });
-                data['external'] = values.exterior;
+                values.exterior.map((item: any): any => {
+                    if(item.name){
+                        outArr.push(item);
+                    }
+                });
+                data['external'] = outArr;
                 validateArr.push(true);
             } else {
                 validateArr.push(false);
@@ -146,10 +152,10 @@ function MeetingNormalEditor(props: EditorData): any {
                 data['smsTime'] = values.begin_remind.join(',');
                 data['smsType'] = values.smsType.join(',');
                 data['endSmsTime'] = values.end_remind.join(',');
-                data['checkinStopMinute'] = values.end_sign_time.format('HH:mm');
-                data['files'] = values.file.map((item: any) => {
+                data['checkinStopMinute'] = values.end_sign_time ? values.end_sign_time.format('HH:mm') : '';
+                data['files'] = values.file ? values.file.map((item: any) => {
                     return item.item ? item.item : item.response;
-                });
+                }) : [];
                 data['summary'] = values.description;
                 data['agenda'] = values.agenda && values.agenda.map((item: any) => {
                     return {
@@ -188,7 +194,7 @@ function MeetingNormalEditor(props: EditorData): any {
                     }
                 }, (err: any) => {
                     setSaveLoading(false);
-                    if (err.data.name) {
+                    if (err.data && err.data.name) {
                         waringConfirm('重复确认', `存在会议时间冲突的人员${err.data.name}，确定继续邀请吗？`, () => {
                             saveData(1);
                         });

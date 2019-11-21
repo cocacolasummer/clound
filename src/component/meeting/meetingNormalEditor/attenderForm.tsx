@@ -175,7 +175,7 @@ function MeetingAttenderForm(props: MeetingAttenderFormProps) {
                             <TreeSelect onChange={(value) => setAttenderState(value)} {...tProps}/>
                         )}
                     </Form.Item>
-                    <Form.Item label="导入人员" extra="请按照指定的模板导入联系人">
+                    <Form.Item label="导入人员" extra="请按照指定的模板导入联系人"> 
                         {getFieldDecorator('file', {
                             valuePropName: 'fileList',
                             getValueFromEvent: normFile,
@@ -184,8 +184,11 @@ function MeetingAttenderForm(props: MeetingAttenderFormProps) {
                                 <Button>
                                     <Icon type="upload"/> 上传文件
                                 </Button>
+    
                             </Upload>
+                             
                         )}
+                         <a title="外部联系人导入模板" href="/file/外部联系人导入表.xlsx" style={{right: '-300px', position: 'absolute', top: '-7px'}}>外部联系人模板</a>
                     </Form.Item>
                     {ExteriorListItems}
                     <Button type="dashed"

@@ -69,7 +69,7 @@ const VoteList = () => {
         }, (res: any) => {
             dispatch({
                 type: 'change votelist data',
-                list: listType === '1' ? res.data['attendVoteList'] : res.data['createVoteList'],
+                list: listType === '1' ? res.data['createVoteList'] : res.data['attendVoteList'],
                 limit: limit,
                 total: total,
                 page: page

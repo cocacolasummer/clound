@@ -17,6 +17,10 @@ import {
 
 import {IState} from '@/store';
 
+import AccessServices from '@/services/accessServices';
+const _accessServices = new AccessServices();
+import { success, error, } from '@/util/golbalModalMessage';
+
 const mapState = (state: IState): {
     page: number;
     limit: number;
@@ -45,6 +49,29 @@ const AccessGroup: React.ComponentType = () => {
         listType,
         selectRows
     } = useMappedState(mapState);
+
+    const delgroups = (ids: any) => {
+    _accessServices.deviceGroupDel({ ids: ids.join(',')}, (res: any) => {
+        success(`删除设备组成功！`);
+            _accessServices.deviceGroupList({
+                page: 1,
+                pagesize: limit,
+                name: '',
+            }, (data: any) => {
+                dispatch({
+                    type: 'change accessGroup list',
+                    list: data.data.list,
+                    page: 1,
+                    total: data.data.count,
+                    limit: limit
+                });
+            }, (err: any) => {
+                console.log(err);
+            });
+    }, (err: any) => {
+        error(err.message);
+    });
+};
     return (
         <ShowListWrapper>
             <Spin spinning={loading} delay={100}>
@@ -59,11 +86,15 @@ const AccessGroup: React.ComponentType = () => {
                                     });
                                 }}
                                 style={{width: 150, marginRight: 15}}/>
-                        <Button type={"danger"} disabled={selectRows.length === 0}>批量删除</Button>
+                        <Button type={"danger"} disabled={selectRows.length === 0} onClick={(): void => {
+                                delgroups(selectRows)
+                            }}>批量删除</Button>
                         <Button type={"primary"} style={{marginLeft: 15}}
                                 onClick={(): void => {
                                     dispatch({
-                                        type: 'change accessGroupEditor show'
+                                        type: 'change accessGroupEditor show',
+                                        editorType: 'add',
+                                        data: ''
                                     });
                                 }}
                         >添加</Button>

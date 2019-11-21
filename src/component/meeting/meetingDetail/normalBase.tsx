@@ -12,7 +12,6 @@ import {
     ImgChairperson,
     ImgDescription,
     ImgFile,
-    ImgSeat,
     ImgTime,
     ImgUser,
     ImgTxt,
@@ -35,7 +34,6 @@ import {
     DetailBaseTimeSmall,
     DetailBaseUser,
     DetailBaseFile,
-    DetailBaseSeat,
     DetailBaseDes,
     DetailBaseOuterWrapper,
     DetailBaseAgenda
@@ -201,18 +199,6 @@ function DetailNormalMeetingBase() {
                                 </DetailBaseUser>
                             </DetailBaseItemContent>
                         </DetailBaseItem>
-                        {
-                            data.detail && Boolean(data.detail.room.seat_id) ? <DetailBaseItem>
-                                <DetailBaseLabel>
-                                    <img src={ImgSeat} alt=""/>
-                                    <strong>会议坐席</strong>
-                                </DetailBaseLabel>
-                                <DetailBaseItemContent
-                                    className={"meeting-res-detail-base-item-right meeting-res-detail-seat"}>
-                                    <DetailBaseSeat>点击查看</DetailBaseSeat>
-                                </DetailBaseItemContent>
-                            </DetailBaseItem> : null
-                        }
                     </DetailBaseContent>
 
                     <CrowChildWrapper ref={attenderWrapper}>

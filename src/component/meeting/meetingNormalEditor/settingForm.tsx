@@ -129,12 +129,12 @@ const SettingsMeetingForm: React.ComponentType<SettingsMeetingFormProps> = (prop
         newAgenda.push({});
         setAgendaList(newAgenda);
     };
-
+    
     const fil = data && data.files && data.files.map((item: any, index: number) => {
         return {
             'uid': index,
             'name': item.replace(/^\/.+\//, ''),
-            'url': `/meetingcloud/remote.php/webdav/${item.replace(/^\/.+\//, '')}`,
+            'url': `/meetingcloud/remote.php/webdav/${item}`,
             'item': item,
             'status': 'done'
         };

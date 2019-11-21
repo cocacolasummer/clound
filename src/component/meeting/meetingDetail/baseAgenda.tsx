@@ -7,7 +7,7 @@ import {
     ImgChairperson,
     ImgTime,
     ImgUser,
-    ImgAgenda, ImgSeat
+    ImgAgenda, 
 } from '@/assert/img/meeting/detail';
 
 import {
@@ -16,7 +16,7 @@ import {
     DetailBaseLabel,
     DetailBaseItemContent,
     DetailBaseUser,
-    DetailAgendaTime, DetailBaseSeat
+    DetailAgendaTime,
 } from './ui';
 
 import {
@@ -121,16 +121,6 @@ const BaseAgenda: React.ComponentType<BaseAgendaProps> = (props: BaseAgendaProps
                             </DetailBaseLabel>
                             <DetailBaseItemContent>
                                 产品需求模块分析汇报
-                            </DetailBaseItemContent>
-                        </DetailBaseItem>
-                        <DetailBaseItem>
-                            <DetailBaseLabel>
-                                <img src={ImgSeat} alt=""/>
-                                <strong>会议坐席</strong>
-                            </DetailBaseLabel>
-                            <DetailBaseItemContent
-                                className={"meeting-res-detail-base-item-right meeting-res-detail-seat"}>
-                                <DetailBaseSeat>点击查看</DetailBaseSeat>
                             </DetailBaseItemContent>
                         </DetailBaseItem>
                     </DetailBaseContent> : null

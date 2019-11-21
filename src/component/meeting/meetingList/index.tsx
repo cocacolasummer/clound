@@ -76,7 +76,7 @@ const MeetingList = (props: MeetingListProps) => {
         const meetingType = props.type === 'normal' ? 0 : 1;
         _meetingResServices.getResMeetingList({
             page: 1,
-            limit: limit,
+            pagesize: limit,
             search: search,
             type: kind,
             status: status,
@@ -87,20 +87,20 @@ const MeetingList = (props: MeetingListProps) => {
                 type: 'change meetinglist data',
                 list: res.data.list,
                 total: parseInt(res.data.count),
-                page: page,
+                page: 1,
                 limit: limit
             });
             setLoading(false);
         }, () => {
             warning('数据获取失败');
         });
-    }, [search, kind, status, date, total, dispatch, props.type, limit, page]);
+    }, [search, kind, date, status, dispatch, props.type]);
     useEffect(() => {
         setLoading(true);
         const meetingType = props.type === 'normal' ? 0 : 1;
         _meetingResServices.getResMeetingList({
             page: page,
-            limit: limit,
+            pagesize: limit,
             search: search,
             type: kind,
             status: status,
@@ -118,7 +118,7 @@ const MeetingList = (props: MeetingListProps) => {
         }, () => {
             warning('数据获取失败');
         });
-    }, [page, limit, dispatch, props.type, search, kind, status, date]);
+    }, [page, limit, dispatch, props.type]);
     const meetingStatusOptions = (status: number | string | undefined) => {
         const items: object[] = [];
         let newStatus: number;
@@ -179,7 +179,7 @@ const MeetingList = (props: MeetingListProps) => {
                         <Form layout="inline">
                             <Form.Item>
                                 <Button target={"_blank"}
-                                        href={`/meetingcloud/apps/meeting/api/v1/meetingListNew?isExport=true&date=${date}`}
+                                        href={`/meetingcloud/apps/meeting/api/v1/meetingListNew?isExport=true&page=-1&date=${date}`}
                                         type={"primary"}>导出Excel</Button>
                             </Form.Item>
                         </Form>

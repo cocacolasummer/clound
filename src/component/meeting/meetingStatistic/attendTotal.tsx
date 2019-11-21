@@ -53,7 +53,7 @@ const AttendTotal = () => {
                         count: parseInt(item.count) || 0,
                         minutes: parseInt(item.minutes) || 0,
                         roomId: item.roomId,
-                        name: item.name
+                        name: item.name || '123'
                     };
                 }),
                 attendTotalCount: parseInt(res.data.count.count) || 0
@@ -78,7 +78,7 @@ const AttendTotal = () => {
                         count: parseInt(item.count) || 0,
                         minutes: parseInt(item.minutes) || 0,
                         roomId: item.roomId,
-                        name: item.name
+                        name: item.name || '123'
                     };
                 }),
                 attendTotalCount: parseInt(res.data.count) || 0

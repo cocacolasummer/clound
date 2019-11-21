@@ -11,15 +11,19 @@ import GlobalServices from '@/services/globalServices';
 
 const _globalServices = new GlobalServices();
 
-// import {MeetingPageLayout} from "@/layout/meetingPageLayout";
+import {MeetingPageLayout} from "@/layout/meetingPageLayout";
 import {MeetingNormalPageLayout} from "@/layout/meetingNormalPageLayout";
 
-// import {SeatPageLayout} from "@/layout/seatPageLayout";
-// import {VotePageLayout} from "@/layout/votePageLayout";
+import {AccessPageLayout} from "@/layout/accessPageLayout";
 
-// import {AccessPageLayout} from "@/layout/accessPageLayout";
+// import {SeatPageLayout} from "@/layout/seatPageLayout";
+
+import {VotePageLayout} from "@/layout/votePageLayout";
+
 // import {LogisticsPageLayout} from "@/layout/logisticsPageLayout";
+
 // import {ShortMessagePageLayout} from "@/layout/shortMessagePageLayout";
+
 import {error} from "@/util/golbalModalMessage";
 
 const GlobalStyle = createGlobalStyle`
@@ -70,12 +74,12 @@ const App: React.ComponentType = () => {
                             return element;
                         }}/>
                         <Switch>
-                            <Route exact path={'/'} render={() => <Redirect to="/normalmeeting/res/"/>}/>
+                            <Route exact path={'/'} render={() => <Redirect to="/access/user/"/>}/>
                             {/*<Route path="/seat/" component={SeatPageLayout}/>*/}
-                            {/*<Route path="/meeting/" component={MeetingPageLayout}/>*/}
+                            <Route path="/meeting/" component={MeetingPageLayout}/>
                             <Route path="/normalmeeting/" component={MeetingNormalPageLayout}/>
-                            {/*<Route path="/vote/" component={VotePageLayout}/>*/}
-                            {/*<Route path="/access/" component={AccessPageLayout}/>*/}
+                            <Route path="/vote/" component={VotePageLayout}/>
+                            <Route path="/access/" component={AccessPageLayout}/>
                             {/*<Route path="/logistics/" component={LogisticsPageLayout}/>*/}
                             {/*<Route path="/sms/" component={ShortMessagePageLayout}/>*/}
                         </Switch>

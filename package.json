@@ -8,7 +8,7 @@
     "dev": "NODE_ENV=development node_modules/.bin/webpack-dev-server --hot",
     "dev_win": "cross-env NODE_ENV=development node_modules/.bin/webpack-dev-server --hot",
     "dist": "NODE_ENV=production WEBPACK_ENV=online node_modules/.bin/webpack -p",
-    "dist_win": "set WEBPACK_ENV=online&& node_modules/.bin/webpack -p",
+    "dist_win": "cross-env NODE_ENV=production node_modules/.bin/webpack -p",
     "eslint": "eslint src --ext .tsx"
   },
   "dependencies": {
@@ -83,9 +83,9 @@
     "sass-loader": "^7.2.0",
     "typescript": "^3.6.3",
     "url-loader": "^2.1.0",
-    "webpack": "^4.39.2",
+    "webpack": "^4.41.2",
     "webpack-bundle-analyzer": "^3.4.1",
-    "webpack-cli": "^3.3.6",
+    "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.8.0"
   }
 }
