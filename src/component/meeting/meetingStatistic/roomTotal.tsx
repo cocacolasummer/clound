@@ -157,7 +157,7 @@ const RoomTotal = () => {
         <RoomTotalWrapper>
             <Spin delay={100} spinning={loading}>
                 <CardHeader>
-                    <CardHeaderTitle>企业部门参会统计排名</CardHeaderTitle>
+                    <CardHeaderTitle>部门参会排名</CardHeaderTitle>
                     <StatisticOperate>
                         <RangePicker
                             value={[moment(roomTotalDate[0], 'YYYY-MM-DD'), moment(roomTotalDate[1], 'YYYY-MM-DD')]}

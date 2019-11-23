@@ -32,7 +32,6 @@ const AccessGroupEditorForm: React.ComponentType<AccessGroupEditorFormProps> = (
     let viewer: Viewer | undefined;
     const [bgFileList, setBgFileList] = useState([]);
     const [fileList, setfileList] = useState([]);
-    // const dispatch = useDispatch();
     const {
         data
     } = useMappedState(mapState);
@@ -65,7 +64,6 @@ const AccessGroupEditorForm: React.ComponentType<AccessGroupEditorFormProps> = (
         return e && e.fileList;
     };
     const logonormFile = (e: any): any => {
-
         if (!isImage(e.file.type)) {
             warningModal(`文件格式${e.file.type}不是支持的类型`, '只能上传图片文件');
             e && setfileList(e.fileList.filter((fileItem: any) => e.file.uid !== fileItem.uid));
@@ -77,6 +75,24 @@ const AccessGroupEditorForm: React.ComponentType<AccessGroupEditorFormProps> = (
         e && setfileList(e.fileList);
         return e && e.fileList;
     };
+
+    const coverimageArr = data && data.cover_path ? [{
+        uid: '-1',
+        name: 'image.png',
+        status: 'done',
+        url: data.cover_path,
+        response: data.cover_path,
+        type: "image/png",
+      }] : [];
+
+      const logoimageArr = data && data.logo_path !== null ? [{
+        uid: '-1',
+        name: 'image.png',
+        status: 'done',
+        url: data.logo_path,
+        response: data.logo_path,
+        type: "image/png",
+      }] : [];
 
     const handlePreview = async(file: any) => {
         if (!file.url) {
@@ -122,6 +138,7 @@ const AccessGroupEditorForm: React.ComponentType<AccessGroupEditorFormProps> = (
             </Form.Item>
             <Form.Item label="封面图片">
                 {getFieldDecorator('coverimage', {
+                    initialValue: coverimageArr,
                     valuePropName: 'fileList',
                     getValueFromEvent: bgNormFile,
                 })(
@@ -146,6 +163,7 @@ const AccessGroupEditorForm: React.ComponentType<AccessGroupEditorFormProps> = (
 
             <Form.Item label="logo">
                 {getFieldDecorator('logoimage', {
+                    initialValue: logoimageArr,
                     valuePropName: 'fileList',
                     getValueFromEvent: logonormFile,
                 })(

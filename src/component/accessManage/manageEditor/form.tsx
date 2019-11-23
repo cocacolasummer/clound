@@ -1,32 +1,51 @@
-import React, {useState, useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
-    Form, Icon,
+    Form,
     Input,
-    Upload,
     Select
 } from 'antd';
-import {FormComponentProps} from "antd/lib/form";
-import TimePickerRange from '@/component/timeRange';
-import moment from "moment";
-import {WrappedFormUtils} from "antd/lib/form/Form";
+import { FormComponentProps } from "antd/lib/form";
+
+import { WrappedFormUtils } from "antd/lib/form/Form";
+
+import AccessServices from '@/services/accessServices';
+import { useDispatch, useMappedState } from "redux-react-hook";
+import { IState } from '@/store';
+const _accessServices = new AccessServices();
+
+import { error } from '@/util/golbalModalMessage';
 
 interface AccessManageEditorFormProps extends FormComponentProps {
     data?: any;
     setPropsForm: (form: WrappedFormUtils) => void;
 }
 
-const {Option} = Select;
+const { Option } = Select;
+
 const AccessManageEditorForm: React.ComponentType<AccessManageEditorFormProps> = (props: AccessManageEditorFormProps) => {
-    const [fileList, setFileList] = useState([]);
-    const {getFieldDecorator} = props.form;
+    const mapState = (state: IState): {
+        roomdata: any[];
+        grouplist: any[];
+    } => {
+        return {
+            roomdata: state.AccessManageEditor.roomdata,
+            grouplist: state.AccessManageEditor.grouplist,
+        };
+    };
+    const dispatch = useDispatch();
+    const {
+        roomdata,
+        grouplist
+    } = useMappedState(mapState);
+    const { getFieldDecorator } = props.form;
     const formItemLayout = {
         labelCol: {
-            xs: {span: 24},
-            sm: {span: 6},
+            xs: { span: 24 },
+            sm: { span: 6 },
         },
         wrapperCol: {
-            xs: {span: 24},
-            sm: {span: 16},
+            xs: { span: 24 },
+            sm: { span: 16 },
         },
         style: {
             paddingTop: '20px'
@@ -35,20 +54,34 @@ const AccessManageEditorForm: React.ComponentType<AccessManageEditorFormProps> =
     useEffect(() => {
         props.setPropsForm(props.form);
     }, [props]);
-    const normFile = (e: any): any => {
-        console.log('Upload event:', e);
-        if (Array.isArray(e)) {
-            return e;
-        }
-        e && setFileList(e.fileList);
-        return e && e.fileList;
-    };
+
+    useEffect(() => {
+        _accessServices.allDeviceGroup((res: any) => {
+            dispatch({
+                type: 'change accessManageEditor grouplist',
+                grouplist: res.data
+            });
+        }, () => {
+            error('错误！');
+        });
+    }, [dispatch]);
+
+    useEffect(() => {
+        _accessServices.meetingroom((res: any) => {
+            dispatch({
+                type: 'change accessManageEditor roomdata',
+                roomdata: res.data[0]
+            });
+        }, () => {
+            error('错误！');
+        });
+    }, [dispatch]);
 
     return (
         <Form {...formItemLayout}>
             <Form.Item label={"设备名称"}>
                 {getFieldDecorator('name', {
-                    rules: [{required: true, message: '请输入设备组名称'}],
+                    rules: [{ required: true, message: '请输入设备名称' }],
                 })(
                     <Input
                         placeholder="请输入名称"
@@ -57,93 +90,43 @@ const AccessManageEditorForm: React.ComponentType<AccessManageEditorFormProps> =
             </Form.Item>
             <Form.Item label={"设备组"}>
                 {getFieldDecorator('group', {
-                    rules: [{required: true, message: '请选择是否抓拍'}],
-                    initialValue: "lucy"
-                })(
-                    <Select>
-                        <Option value="jack">Jack</Option>
-                        <Option value="lucy">Lucy</Option>
-                    </Select>
-                )}
-            </Form.Item>
-            <Form.Item label={"通行类型"}>
-                {getFieldDecorator('passType', {
-                    rules: [{required: true, message: '请选择通行类型'}],
-                    initialValue: ["lucy"]
+                    rules: [{ required: true, message: '请选择设备组' }],
+                    initialValue: []
                 })(
                     <Select mode="multiple">
-                        <Option value="jack">Jack</Option>
-                        <Option value="lucy">Lucy</Option>
+                        {
+                            grouplist.map((item, index) => {
+                                return (
+                                    <Option value={item.id} key={index}>{item.name}</Option>
+                                );
+                            })
+                        }
                     </Select>
                 )}
             </Form.Item>
-            <Form.Item label={"周一时段"}>
-                {getFieldDecorator('monday', {
-                    rules: [{required: true, message: '请选择通行时间'}],
-                    initialValue: {start: moment('02:00:00', 'HH:mm:ss'), end: moment('23:00:00', 'HH:mm:ss')}
+            <Form.Item label={"设备序列号"}>
+                {getFieldDecorator('mac', {
+                    rules: [{ required: true, message: '请输入设备序列号' }],
                 })(
-                    <TimePickerRange/>
+                    <Input
+                        placeholder="请输入设备序列号"
+                    />,
                 )}
             </Form.Item>
-            <Form.Item label={"周二时段"}>
-                {getFieldDecorator('tuesday', {
-                    rules: [{required: true, message: '请选择通行时间'}],
-                    initialValue: {start: moment('02:00:00', 'HH:mm:ss'), end: moment('23:00:00', 'HH:mm:ss')}
+            <Form.Item label={"门禁地点"}>
+                {getFieldDecorator('room', {
+                    rules: [{ required: true, message: '请选择地点' }],
+                    initialValue: ''
                 })(
-                    <TimePickerRange/>
-                )}
-            </Form.Item>
-            <Form.Item label={"周三时段"}>
-                {getFieldDecorator('wednesday', {
-                    rules: [{required: true, message: '请选择通行时间'}],
-                    initialValue: {start: moment('02:00:00', 'HH:mm:ss'), end: moment('23:00:00', 'HH:mm:ss')}
-                })(
-                    <TimePickerRange/>
-                )}
-            </Form.Item>
-            <Form.Item label={"周四时段"}>
-                {getFieldDecorator('thursday', {
-                    rules: [{required: true, message: '请选择通行时间'}],
-                    initialValue: {start: moment('02:00:00', 'HH:mm:ss'), end: moment('23:00:00', 'HH:mm:ss')}
-                })(
-                    <TimePickerRange/>
-                )}
-            </Form.Item>
-            <Form.Item label={"周五时段"}>
-                {getFieldDecorator('friday', {
-                    rules: [{required: true, message: '请选择通行时间'}],
-                    initialValue: {start: moment('02:00:00', 'HH:mm:ss'), end: moment('23:00:00', 'HH:mm:ss')}
-                })(
-                    <TimePickerRange/>
-                )}
-            </Form.Item>
-            <Form.Item label={"周六时段"}>
-                {getFieldDecorator('saturday', {
-                    rules: [{required: true, message: '请选择通行时间'}],
-                    initialValue: {start: moment('02:00:00', 'HH:mm:ss'), end: moment('23:00:00', 'HH:mm:ss')}
-                })(
-                    <TimePickerRange/>
-                )}
-            </Form.Item>
-            <Form.Item label={"周日时段"}>
-                {getFieldDecorator('sunday', {
-                    rules: [{required: true, message: '请选择通行时间'}],
-                    initialValue: {start: moment('02:00:00', 'HH:mm:ss'), end: moment('23:00:00', 'HH:mm:ss')}
-                })(
-                    <TimePickerRange/>
-                )}
-            </Form.Item>
-            <Form.Item label="封面图片">
-                {getFieldDecorator('image', {
-                    valuePropName: 'fileList',
-                    getValueFromEvent: normFile,
-                })(
-                    <Upload name="logo" listType="picture-card" action="/upload.do">
-                        {fileList.length === 1 ? null : <div>
-                            <Icon type="plus"/>
-                            <div className="ant-upload-text">上传图片</div>
-                        </div>}
-                    </Upload>
+                <Select>
+                    {
+                        roomdata.map((item, index) => {
+                            return (
+                                <Option value={item.id} key={index}>{item.name}</Option>
+                            );
+                        })
+                    }
+                </Select>
                 )}
             </Form.Item>
         </Form>

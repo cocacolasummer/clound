@@ -248,8 +248,8 @@ function DetailNormalMeetingBase() {
                                                     return (
                                                         <DetailBaseOuterWrapper key={index}>
                                                             <span>{index + 1}</span>
-                                                            <small>{item.name}</small>
-                                                            <strong>{item.phone}</strong>
+                                                            <small>{item.user_name}</small>
+                                                            <strong>{item.mobile}</strong>
                                                             <i>{item.email}</i>
                                                         </DetailBaseOuterWrapper>
                                                     );

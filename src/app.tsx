@@ -74,7 +74,7 @@ const App: React.ComponentType = () => {
                             return element;
                         }}/>
                         <Switch>
-                            <Route exact path={'/'} render={() => <Redirect to="/access/user/"/>}/>
+                            <Route exact path={'/'} render={() => <Redirect to="/normalmeeting/res/"/>}/>
                             {/*<Route path="/seat/" component={SeatPageLayout}/>*/}
                             <Route path="/meeting/" component={MeetingPageLayout}/>
                             <Route path="/normalmeeting/" component={MeetingNormalPageLayout}/>

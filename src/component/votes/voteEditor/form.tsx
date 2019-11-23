@@ -8,7 +8,6 @@ import {
     Icon,
     Radio, TreeSelect
 } from 'antd';
-
 const {Option} = Select;
 const {RangePicker} = DatePicker;
 import {IState} from "@/store";
@@ -74,7 +73,11 @@ const VoteForm = (props: FormComponentProps) => {
         treeCheckable: true,
         searchPlaceholder: '请选择人员'
     };
-
+    
+    function disabledDate(current: any){
+        const curDate = new Date();
+        return current && current < new Date(curDate.getTime() - 24 * 60 * 6 * 1000).getTime();
+    }
     const optionItems = optionsKey.map((item, index) => {
         return (
             <Form.Item label={index === 0 ? "投票选项" : ""}
@@ -131,7 +134,9 @@ const VoteForm = (props: FormComponentProps) => {
                 {getFieldDecorator('startEndTime', {
                     rules: [{type: 'array', required: true, message: '请选择起止时间'}],
                 })(
-                    <RangePicker showTime={
+                    <RangePicker
+                    disabledDate={disabledDate}
+                    showTime={
                         {
                             minuteStep: 15,
                             secondStep: 10

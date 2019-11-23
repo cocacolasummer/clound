@@ -5,6 +5,10 @@ import {funTransitionHeight} from '@/util/animateUtil';
 
 import {IState} from "@/store";
 
+import UploadFileServices from '@/services/uploadFileServices';
+
+const _uploadFileServices = new UploadFileServices();
+
 const mapEditorState = (state: IState) => {
     return {
         isEdit: state.MeetingEditor.isEdit,
@@ -129,22 +133,25 @@ function MeetingAttenderForm(props: MeetingAttenderFormProps) {
                             </Popconfirm>
                         </ExteriorClose>
                         <Form.Item label="姓名">
-                            {getFieldDecorator(`exterior[${index}.name]`, {
-                                initialValue: item.name
+                            {getFieldDecorator(`exterior[${index}.user_name]`, {
+                                initialValue: item.user_name,
+                                rules: [{required: true, message: '请输入姓名'}],
                             })(
                                 <Input/>
                             )}
                         </Form.Item>
                         <Form.Item label="联系方式">
-                            {getFieldDecorator(`exterior[${index}.phone]`, {
-                                initialValue: item.phone
+                            {getFieldDecorator(`exterior[${index}.mobile]`, {
+                                initialValue: item.mobile,
+                                rules: [{required: true, message: '请输入联系方式'}],
                             })(
                                 <Input/>
                             )}
                         </Form.Item>
                         <Form.Item label="邮箱">
                             {getFieldDecorator(`exterior[${index}.email]`, {
-                                initialValue: item.email
+                                initialValue: item.email,
+                                rules: [{required: true, message: '请输入邮箱'}],
                             })(
                                 <Input/>
                             )}
@@ -184,9 +191,7 @@ function MeetingAttenderForm(props: MeetingAttenderFormProps) {
                                 <Button>
                                     <Icon type="upload"/> 上传文件
                                 </Button>
-    
                             </Upload>
-                             
                         )}
                          <a title="外部联系人导入模板" href="/file/外部联系人导入表.xlsx" style={{right: '-300px', position: 'absolute', top: '-7px'}}>外部联系人模板</a>
                     </Form.Item>

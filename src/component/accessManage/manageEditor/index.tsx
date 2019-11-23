@@ -16,6 +16,11 @@ import {WrappedAccessManageForm} from './form';
 import {Scrollbars} from "react-custom-scrollbars";
 import {WrappedFormUtils} from "antd/lib/form/Form";
 
+import AccessServices from '@/services/accessServices';
+const _accessServices = new AccessServices();
+
+import {error, success} from "@/util/golbalModalMessage";
+
 interface AccessManageEditorProps {
     show: boolean;
     close: () => void;
@@ -31,6 +36,19 @@ const AccessManageEditor: React.ComponentType<AccessManageEditorProps> = (props:
         propsForm.validateFields((err: any, values: any) => {
             if (!err) {
                 console.log(values);
+                _accessServices.deviceAdd({
+                    id: '',
+                    name: values.name,
+                    mac: values.mac,
+                    groupId: values.group.join(','),
+                    position_id: values.room,
+                    position_name: '',
+                }, (res: any) => {
+                    props.close();
+                    success('添加设备成功');
+                }, (err: any) => {
+                    error(err && err.message ? err.message : err.toString());
+                })
             }
         });
     };

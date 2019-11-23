@@ -5,7 +5,9 @@ const initialState: AccessManageEditorState = {
     show: false,
     editorType: 'add',
     manageId: undefined,
-    data: null
+    data: null,
+    roomdata: [],
+    grouplist: []
 };
 
 export default function reducer(
@@ -38,6 +40,18 @@ export default function reducer(
             return {
                 ...state,
                 mount: false
+            };
+        }
+        case "change accessManageEditor roomdata": {
+            return {
+                ...state,
+                roomdata: action.roomdata
+            };
+        }
+        case "change accessManageEditor grouplist": {
+            return {
+                ...state,
+                grouplist: action.grouplist
             };
         }
         default:

@@ -134,7 +134,7 @@ function MeetingNormalEditor(props: EditorData): any {
                     return item.split(':')[0];
                 });
                 values.exterior.map((item: any): any => {
-                    if(item.name){
+                    if(item.user_name){
                         outArr.push(item);
                     }
                 });

@@ -70,7 +70,6 @@ const GroupCard: React.ComponentType = () => {
         });
     };
 
-
     const groupCardItems = list.map((item, index) => {
         const hasSelected = selectRows.indexOf(item.id) !== -1;
         return (

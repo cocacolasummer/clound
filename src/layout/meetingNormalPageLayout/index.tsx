@@ -71,6 +71,12 @@ const MeetingNormalPageLayout: React.ComponentType<any> = () => {
                 link: '/normalmeeting/res/',
                 icon: IconRes,
                 iconActive: IconResActive
+            },
+            {
+                name: '会议统计',
+                link: '/normalmeeting/statistic/',
+                icon: IconStatistic,
+                iconActive: IconStatisticActive
             }
         ]
     };

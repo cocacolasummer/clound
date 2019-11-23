@@ -61,7 +61,7 @@ const mapState = (state: IState) => {
     };
 };
 
-import {DeviceImg, VRImg} from '@/assert/img/meeting';
+import {VRImg} from '@/assert/img/meeting';
 
 const dateFormat = 'YYYY年MM月DD日';
 
@@ -72,10 +72,7 @@ interface MeetingTimePickerProps {
 const MeetingTimePicker = (props: MeetingTimePickerProps) => {
     const dispatch = useDispatch();
     const scrollBar: any = useRef();
-    const [deviceHover, setDeviceHover] = useState();
-    const [deviceShow, setDeviceShow] = useState();
     const [loading, setLoading] = useState<boolean>(false);
-
     const {
         roomList, startIndex,
         selectRoom, addressKey, addressList, date,
@@ -127,17 +124,6 @@ const MeetingTimePicker = (props: MeetingTimePickerProps) => {
         return result.size === 0;
     };
 
-    useEffect(() => {
-        if (deviceHover) {
-            _meetingResServices.getRoomDeviceById((res: any) => {
-                setDeviceShow(res.data.data.filter((item: any) => {
-                    return item.belong == deviceHover;
-                }));
-            }, (err: any) => {
-                warning(err);
-            });
-        }
-    }, [deviceHover]);
     useEffect(() => {
         _meetingResServices.getResAddressListInfo((res: any) => {
             dispatch({
@@ -381,25 +367,8 @@ const MeetingTimePicker = (props: MeetingTimePickerProps) => {
 
     // 会议室对应操作列表
     const roomLinkListItem = (roomTempList && roomTempList.length) && roomTempList.map((item: any, index) => {
-        const content = (
-            <div>
-                {
-                    (deviceShow && deviceShow.length > 0) ? deviceShow.map((item: any, index: number) => {
-                        return (
-                            <p key={index}>{item.name}</p>
-                        );
-                    }) : <CustomEmpty/>
-                }
-
-            </div>
-        );
         return (
             <TimeOPWrapper key={index}>
-                <Popover content={content} title="设备列表">
-                    <Button onMouseEnter={(e) => {
-                        setDeviceHover(item.id);
-                    }}><img src={DeviceImg} alt=""/></Button>
-                </Popover>
                 <Button onClick={(e): void => {
                     if (!item.vr_link) {
                         warning('该会议室没有VR链接');

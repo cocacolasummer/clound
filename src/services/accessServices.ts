@@ -61,6 +61,46 @@ class AccessServices {
         });
     }
 
+    allDeviceGroup(successCallBack: any, errorCallback: any): void {
+        axios.get(`/meetingcloud/apps/accesscontrol/api/v1/allDeviceGroup`)
+            .then(function(response) {
+                if (!response.data.code) {
+                    successCallBack(response.data);
+                } else {
+                    errorCallback(response.data);
+                }
+            })
+            .catch(function(error) {
+                errorCallback(error);
+            });
+    }
+
+    meetingroom(successCallBack: any, errorCallback: any): void {
+        axios.get(`/meetingcloud/apps/assets/api/v1/meeting`)
+            .then(function(response) {
+                if (!response.data.code) {
+                    successCallBack(response.data);
+                } else {
+                    errorCallback(response.data);
+                }
+            })
+            .catch(function(error) {
+                errorCallback(error);
+            });
+    }
+
+    deviceAdd(data: any, success: (data: any) => void, error: (err: Error) => void): void {
+        axios.post(`/meetingcloud/apps/accesscontrol/api/v1/deviceAdd`, data).then((res) => {
+            if (res.data.code) {
+                error(res.data);
+            } else {
+                success(res.data);
+            }
+        }).catch((err) => {
+            error(err);
+        });
+    }
+
     getUserTypeList(params: {
         search?: string;
         page?: number;

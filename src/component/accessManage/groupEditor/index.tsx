@@ -59,7 +59,7 @@ const AccessGroupEditor: React.ComponentType<AccessGroupEditorProps> = (props: A
 
     useEffect(() => {
         if (editorType === 'edit') {
-            _accessService.deviceGroupDetail({id : groupId}, (res: any) => {
+            _accessService.deviceGroupDetail({id: groupId}, (res: any) => {
                 console.log(res);
                 dispatch({
                     type: 'change accessGroupEditor defaultvalues',
@@ -72,11 +72,10 @@ const AccessGroupEditor: React.ComponentType<AccessGroupEditorProps> = (props: A
         }else{
             dispatch({
                 type: 'change accessGroupEditor defaultvalues',
-                data: ''
+                data: '',
             });
         }
     }, [dispatch, groupId, editorType]);
-
 
     const saveGroup = () => {
         const form = formRef.current.getForm();
@@ -84,13 +83,14 @@ const AccessGroupEditor: React.ComponentType<AccessGroupEditorProps> = (props: A
             if(!errs) {
                 console.log('Received values of form: ', values);
                 _accessService.AdddeviceGroup({
+                    id: groupId,
                     name: values.name,
                     snap: values.isSnapshot,
-                    coverPath: values.coverimage? `/meetingcloud/remote.php/webdav/${values.coverimage[0].name}` : '',
-                    logoPath: values.logoimage? `/meetingcloud/remote.php/webdav/${values.logoimage[0].name}` : '',
+                    coverPath: values.coverimage ? `/meetingcloud/remote.php/webdav/${values.coverimage[0].response}` : '',
+                    logoPath: values.logoimage ? `/meetingcloud/remote.php/webdav/${values.logoimage[0].response}` : '',
                     description: values.description,
                 }, (res: any) => {
-                    success('添加设备组成功');
+                    success(editorType === 'edit' ? `修改设备组成功` : `添加设备组成功`);
                     setLoading(false);
                     props.close();
                     const _accessService1 = new AccessServices();
@@ -141,7 +141,7 @@ const AccessGroupEditor: React.ComponentType<AccessGroupEditorProps> = (props: A
                         >
                             <RightCrow>
                                 <CrowHeader>
-                                    <CrowTitle>添加设备组</CrowTitle>
+                                    <CrowTitle>{editorType === 'edit' ? `修改设备组` : `添加设备组`}</CrowTitle>
                                     <CrowClose>
                                         <Button shape={"circle"} onClick={(): void => props.close()} icon={"close"}/>
                                     </CrowClose>
@@ -152,7 +152,7 @@ const AccessGroupEditor: React.ComponentType<AccessGroupEditorProps> = (props: A
                                 <CrowFooter>
                                     <Button type={"primary"} onClick={() => {
                                         saveGroup();
-                                    }}>保存</Button>
+                                    }}>{editorType === 'edit' ? `修改保存` : `添加保存`}</Button>
                                 </CrowFooter>
                             </RightCrow>
                         </CSSTransition>

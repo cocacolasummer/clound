@@ -87,7 +87,7 @@ const AccessGroup: React.ComponentType = () => {
                                 }}
                                 style={{width: 150, marginRight: 15}}/>
                         <Button type={"danger"} disabled={selectRows.length === 0} onClick={(): void => {
-                                delgroups(selectRows)
+                                delgroups(selectRows);
                             }}>批量删除</Button>
                         <Button type={"primary"} style={{marginLeft: 15}}
                                 onClick={(): void => {

@@ -158,7 +158,7 @@ const MeetingList = (props: MeetingListProps) => {
             <Spin spinning={loading}>
 
                 <ShowListHeader>
-                    <ShowListTitle>历史会议</ShowListTitle>
+                    <ShowListTitle>会议列表</ShowListTitle>
                     <ShowListOperateCenter>
                         <Form.Item>
                             <Radio.Group defaultValue={kind}

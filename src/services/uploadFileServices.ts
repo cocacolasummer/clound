@@ -13,6 +13,16 @@ class UploadFileServices {
         });
     }
 
+    meetingImportUsers(params: {
+        data: FormData;
+    }, success: (data: any) => void, error: (err: Error) => void): void {
+        axios.post(`/meetingcloud/apps/meeting/api/v1/meetingImportUsers`, params.data).then((res) => {
+            success(res.data);
+        }).catch((err) => {
+            error(err);
+        });
+    }
+
     uploadFile(params: {
         fileName: string;
         data: File;
@@ -22,7 +32,7 @@ class UploadFileServices {
         axios.put(`/meetingcloud/remote.php/webdav/${fileName}`, params.data, {
             headers: {
                 'Content-Type': params.type,
-                'Content-Disposition': `attachment; filename="${fileName}"`
+                'Content-Disposition': `attachment; filename="${window.encodeURIComponent(fileName)}"`
             },
             onUploadProgress: ({total, loaded}) => {
                 onProgress({percent: parseInt(Math.round(loaded / total * 100).toFixed(2))});

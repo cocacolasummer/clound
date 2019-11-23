@@ -8,7 +8,7 @@
     "dev": "NODE_ENV=development node_modules/.bin/webpack-dev-server --hot",
     "dev_win": "cross-env NODE_ENV=development node_modules/.bin/webpack-dev-server --hot",
     "dist": "NODE_ENV=production WEBPACK_ENV=online node_modules/.bin/webpack -p",
-    "dist_win": "cross-env NODE_ENV=production node_modules/.bin/webpack -p",
+    "dist_win": "cross-env NODE_ENV=production WEBPACK_ENV=online node_modules/.bin/webpack -p",
     "eslint": "eslint src --ext .tsx"
   },
   "dependencies": {
