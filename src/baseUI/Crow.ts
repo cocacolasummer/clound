@@ -37,7 +37,6 @@ const CrowTitle = styled.h3`
 line-height: 49px;
 font-size: 18px;
 font-weight: 400;
-padding-left: 20px;
 `;
 
 const CrowClose = styled.span`

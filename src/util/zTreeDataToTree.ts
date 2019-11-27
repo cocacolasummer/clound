@@ -60,6 +60,48 @@ export function translateDataToTree(data: any) {
     return parents;
 }
 
+export function translateDataToTreeUserid(data: any) {
+    let parents = data.filter((value: any) => !value.pId);
+    let childrens = data.filter((value: any) => value.pId);
+    parents = parents.map((item: any, index: number) => {
+        item.key = item.user_id;
+        item.title = item.name;
+        if (item.isDepartment) {
+            item.value = item.user_id + ':' + index.toString() + ':' + 'd';
+        } else {
+            item.value = item.user_id + ':' + 'salt';
+        }
+        return item;
+    });
+    childrens = childrens.map((item: any, index: number) => {
+        item.key = item.user_id;
+        item.title = item.name;
+        if (item.isDepartment) {
+            item.value = item.user_id + ':' + (index + parents.length).toString() + ':' + 'd';
+        } else {
+            item.value = item.user_id + ':' + 'salt';
+        }
+        return item;
+    });
+    const translator = (parents: any, childrens: any) => {
+        parents.forEach((parent: any) => {
+                childrens.forEach((current: any, index: any) => {
+                        if (current.pId === parent.id) {
+                            const temp = JSON.parse(JSON.stringify(childrens));
+                            temp.splice(index, 1);
+                            translator([current], temp);
+                            typeof parent.children !== 'undefined' ? parent.children.push(current) : parent.children = [current];
+                        }
+                    }
+                );
+            }
+        );
+    };
+
+    translator(parents, childrens);
+    return parents;
+}
+
 export const objDeepCopy = (source: any) => {
     const sourceCopy = source instanceof Array ? [] : {};
     for (const item in source) {

@@ -1,9 +1,9 @@
-import React, {useEffect, useRef, useState, Fragment} from 'react';
-import {useMappedState} from "redux-react-hook";
+import React, { useEffect, useRef, useState, Fragment } from 'react';
+import { useMappedState } from "redux-react-hook";
 
-import {funTransitionHeight} from '@/util/animateUtil';
+import { funTransitionHeight } from '@/util/animateUtil';
 
-import {IState} from "@/store";
+import { IState } from "@/store";
 
 import UploadFileServices from '@/services/uploadFileServices';
 
@@ -24,6 +24,7 @@ import {
     Form, Icon, Input, Popconfirm,
     TreeSelect, Upload
 } from 'antd';
+import {error, success} from "@/util/golbalModalMessage";
 
 import {
     FormWrapper,
@@ -33,9 +34,9 @@ import {
     ExteriorWrapper,
     ExteriorClose
 } from './ui';
-import {CrowClose} from "@/baseUI/Crow";
-import {CSSTransition} from "react-transition-group";
-import {FormComponentProps} from "antd/lib/form";
+import { CrowClose } from "@/baseUI/Crow";
+import { CSSTransition } from "react-transition-group";
+import { FormComponentProps } from "antd/lib/form";
 
 interface MeetingAttenderFormProps extends FormComponentProps {
     propsSetAttenderForm: any;
@@ -84,7 +85,6 @@ function MeetingAttenderForm(props: MeetingAttenderFormProps) {
         return e && e.fileList;
     };
     useEffect(() => {
-
         if (data && data.detail && data.detail.external) {
             setExteriorList(data.detail.external);
         }
@@ -93,16 +93,16 @@ function MeetingAttenderForm(props: MeetingAttenderFormProps) {
     useEffect(() => {
         props.propsSetAttenderForm(props.form);
     });
-    const {getFieldDecorator} = props.form;
+    const { getFieldDecorator } = props.form;
 
     const formItemLayout: object = {
         labelCol: {
-            xs: {span: 24},
-            sm: {span: 6},
+            xs: { span: 24 },
+            sm: { span: 6 },
         },
         wrapperCol: {
-            xs: {span: 24},
-            sm: {span: 16},
+            xs: { span: 24 },
+            sm: { span: 16 },
         },
     };
     const removeExterior = (index: number): void => {
@@ -129,31 +129,31 @@ function MeetingAttenderForm(props: MeetingAttenderFormProps) {
                     <ExteriorWrapper>
                         <ExteriorClose>
                             <Popconfirm title={`确定删除吗？`} onConfirm={() => removeExterior(index)}>
-                                <Button icon={'delete'} shape={'circle'}/>
+                                <Button icon={'delete'} shape={'circle'} />
                             </Popconfirm>
                         </ExteriorClose>
                         <Form.Item label="姓名">
                             {getFieldDecorator(`exterior[${index}.user_name]`, {
                                 initialValue: item.user_name,
-                                rules: [{required: true, message: '请输入姓名'}],
+                                rules: [{ required: true, message: '请输入姓名' }],
                             })(
-                                <Input/>
+                                <Input />
                             )}
                         </Form.Item>
                         <Form.Item label="联系方式">
                             {getFieldDecorator(`exterior[${index}.mobile]`, {
                                 initialValue: item.mobile,
-                                rules: [{required: true, message: '请输入联系方式'}],
+                                rules: [{ required: true, message: '请输入联系方式' }],
                             })(
-                                <Input/>
+                                <Input />
                             )}
                         </Form.Item>
                         <Form.Item label="邮箱">
                             {getFieldDecorator(`exterior[${index}.email]`, {
                                 initialValue: item.email,
-                                rules: [{required: true, message: '请输入邮箱'}],
+                                rules: [{ required: true, message: '请输入邮箱' }],
                             })(
-                                <Input/>
+                                <Input />
                             )}
                         </Form.Item>
                     </ExteriorWrapper>
@@ -168,8 +168,8 @@ function MeetingAttenderForm(props: MeetingAttenderFormProps) {
                 <FormItemTitle>参会人员</FormItemTitle>
                 <CrowClose>
                     <Button size={"small"} onClick={(e) => setShowContent(!showContent)}
-                            shape="circle"
-                            icon={showContent ? "up" : "down"}/>
+                        shape="circle"
+                        icon={showContent ? "up" : "down"} />
                 </CrowClose>
             </FormItemHeader>
             <FormContent isShow={showContent}>
@@ -177,29 +177,46 @@ function MeetingAttenderForm(props: MeetingAttenderFormProps) {
                     <Form.Item label="参会人员">
                         {getFieldDecorator('attend', {
                             initialValue: data && data.detail && data.detail.attender.map((item: any) => `${item.user_id}:salt`),
-                            rules: [{required: true, message: '请选择参会人员'}],
+                            rules: [{ required: true, message: '请选择参会人员' }],
                         })(
-                            <TreeSelect onChange={(value) => setAttenderState(value)} {...tProps}/>
+                            <TreeSelect onChange={(value) => setAttenderState(value)} {...tProps} />
                         )}
                     </Form.Item>
-                    <Form.Item label="导入人员" extra="请按照指定的模板导入联系人"> 
+                    <Form.Item label="导入人员" extra="请按照指定的模板导入联系人">
                         {getFieldDecorator('file', {
                             valuePropName: 'fileList',
                             getValueFromEvent: normFile,
                         })(
-                            <Upload name="logo" listType="picture">
+                            <Upload name="logo" showUploadList={false} customRequest={(e: any) => {
+                                const formData = new FormData();
+                                formData.set("file", e.file);
+                                _uploadFileServices.meetingImportUsers({
+                                    data: formData
+                                }, (res: any) => {
+                                    const newExterior = exteriorList.slice();
+                                    res.data.map((item: any) => {
+                                        newExterior.push(item);
+                                    });
+                                    setExteriorList(newExterior);
+                                    e.onSuccess(res);
+                                    success('导入外部联系人成功！')
+                                }, (err: any) => {
+                                    e.onError(err);
+                                    error(err.message)
+                                });
+                                }} listType="picture">
                                 <Button>
-                                    <Icon type="upload"/> 上传文件
+                                    <Icon type="upload" /> 上传文件
                                 </Button>
                             </Upload>
                         )}
-                         <a title="外部联系人导入模板" href="/file/外部联系人导入表.xlsx" style={{right: '-300px', position: 'absolute', top: '-7px'}}>外部联系人模板</a>
+                        <a title="外部联系人导入模板" href="/file/外部联系人导入表.xlsx" style={{ right: '-200px', position: 'absolute', top: '-7px' }}>外部联系人模板</a>
                     </Form.Item>
                     {ExteriorListItems}
                     <Button type="dashed"
-                            onClick={() => addExterior()}
-                            style={{width: '380px', marginLeft: '50px', marginBottom: '20px'}}>
-                        <Icon type="plus"/>添加外部人员
+                        onClick={() => addExterior()}
+                        style={{ width: '380px', marginLeft: '50px', marginBottom: '20px' }}>
+                        <Icon type="plus" />添加外部人员
                     </Button>
                 </Form>
             </FormContent>

@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import {Button, Table, Popconfirm} from 'antd';
+import {Button, Table} from 'antd';
 import {TableRowSelection} from "antd/lib/table";
 import {CSSTransition} from "react-transition-group";
 import {ContentWrapper} from "@/component/meeting/meetingList/ui";
@@ -9,6 +9,9 @@ import {useDispatch, useMappedState} from 'redux-react-hook';
 import {ListObjects} from '@/store/access/accessUserBlack';
 
 import {IState} from '@/store';
+import AccessServices from '@/services/accessServices';
+const _accessServices = new AccessServices();
+import { success, error, waringConfirm, } from '@/util/golbalModalMessage';
 
 const mapState = (state: IState): {
     list: ListObjects[] | undefined;
@@ -18,6 +21,14 @@ const mapState = (state: IState): {
         list: state.AccessUserBlack.list,
         selectRows: state.AccessUserBlack.selectRows
     };
+};
+
+const delblack = (id: string) => {
+    _accessServices.delBlack({ ids: id }, (res: any) => {
+        success(`删除黑名单成功！`);
+    }, (err: any) => {
+        error(err.message.toString());
+    });
 };
 
 const UserBlackTable: React.ComponentType = () => {
@@ -44,30 +55,32 @@ const UserBlackTable: React.ComponentType = () => {
             key: 'id'
         },
         {
-            title: '证件号',
-            dataIndex: 'code',
-            key: 'code'
-        },
-        {
             title: '姓名',
-            dataIndex: 'name',
-            key: 'name'
+            dataIndex: 'displayname',
+            key: 'displayname'
         },
         {
-            title: '部门',
-            dataIndex: 'department',
-            key: 'department'
+            title: '门禁',
+            dataIndex: 'device_name',
+            key: 'device_name'
         },
         {
             title: '操作',
             // eslint-disable-next-line react/display-name
             render: (text: string | undefined, record: ListObjects, index: number): React.ReactElement => {
                 return (
-                    <span>
-                        <Popconfirm title={`确定删除“${record.name}”吗`} okText="确定" cancelText="取消">
-                            <Button size={"small"} type={"danger"}>删除</Button>
-                        </Popconfirm>
-                    </span>
+                <span>
+                <Button size={"small"} style={{marginRight: 10}} onClick={(): void => {
+                    dispatch({
+                        type: 'change accessUserBlackEditor show'
+                    });
+                }} type={"primary"} key={index}>编辑</Button>
+                <Button type={"danger"} onClick={(): void => {
+                    waringConfirm('警告', `确定删除该黑名单吗？`, () => {
+                        delblack(record.id);
+                    });
+                }} size={"small"}>删除</Button>
+            </span>
                 );
             }
         }

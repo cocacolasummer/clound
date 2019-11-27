@@ -144,7 +144,7 @@ module.exports = {
         },
         proxy: {
             '/meetingcloud': {
-                target: 'http://192.168.10.187:8080/',
+                target: 'http://192.168.10.187:8888/',
                 changeOrigin: true,
                 secure: false
             }

@@ -127,6 +127,33 @@ const MeetingDetail = (props: MeetingDetailProps) => {
             error(err.message ? err.message : err.toString());
         });
     };
+    const finishMeeting = (id: string) => {
+        _meetingReservationServices.finishMeeting(id, (res: any) => {
+            success(`结束会议${res.message}`);
+            getData();
+            dispatch({
+                type: 'change meetingList total',
+                total: total + 1
+            });
+            _meetingReservationServices.getResRoomListInfo({
+                locationId: addressKey,
+                date: date,
+                meetingType: 0
+            }, (res: any) => {
+                dispatch({
+                    type: 'change meetingeditor hide'
+                });
+                dispatch({
+                    type: 'change timepicker roomlist',
+                    roomList: res.data
+                });
+            }, () => {
+                warning('数据获取失败');
+            });
+        }, (err: any) => {
+            error(err.message ? err.message : err.toString());
+        });
+    };
     const passMeeting = (id: string, pass: number) => {
         const params = {
             pass: pass
@@ -141,7 +168,6 @@ const MeetingDetail = (props: MeetingDetailProps) => {
                 success(`拒绝会议${res.message}`);
             }
             getData();
-
             dispatch({
                 type: 'change meetingList total',
                 total: total + 1
@@ -208,6 +234,19 @@ const MeetingDetail = (props: MeetingDetailProps) => {
                     });
                 }}>取消</Button>
             );
+        }
+        if(data.status === '4'){
+            btnGroup.push(
+                <Button type={"danger"} style={{marginRight: "20px"}} onClick={(): void => {
+                    waringConfirm('警告', `确定结束会议<${data.subject}>吗？`, () => {
+                        finishMeeting(data.id);
+                    });
+                }}>结束会议</Button>
+            );
+
+            // btnGroup.push(
+            //     <Button type={"primary"}>延长会议</Button>
+            // );
         }
 
         if (data.status === '5') {
@@ -317,6 +356,20 @@ const MeetingDetail = (props: MeetingDetailProps) => {
                 }}
                 style={{marginRight: 5}} size={"small"}>重新发起</Button>
             );
+        }
+
+        if(loginUserId === data.creator && data.status === '4'){
+            btnGroup.push(
+                <Button type={"danger"} style={{marginRight: "20px"}} onClick={(): void => {
+                    waringConfirm('警告', `确定结束会议<${data.subject}>吗？`, () => {
+                        finishMeeting(data.id);
+                    });
+                }}>结束会议</Button>
+            );
+            
+            // btnGroup.push(
+            //     <Button type={"primary"}>延长会议</Button>
+            // );
         }
     }
 

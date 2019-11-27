@@ -97,6 +97,28 @@ const SettingsMeetingForm: React.ComponentType<SettingsMeetingFormProps> = (prop
         setAgendaList(newAgenda);
     };
 
+    const disableHours1 = (): Array<number> => {
+        const Hours = Array.from(Array(24), (v, k) => k);
+        let hoursArr: Array<number> = [];
+        console.log(timeRange);
+        if (timeRange[0]) {
+            const h = moment(timeRange[0], 'HH:mm:ss').hour();
+            hoursArr = Hours.slice(h + 1, 24);
+        }
+        return hoursArr;
+    };
+
+    const disableMinutes1 = (h: number): Array<number> => {
+        const Minutes = Array.from(Array(60), (v, k) => k);
+        let minArr: Array<number> = Minutes;
+        if(h < moment(timeRange[0], 'HH:mm:ss').hour()) {
+            minArr = [];
+        }else if (h === moment(timeRange[0], 'HH:mm:ss').hour()) {
+            minArr = Minutes.slice(moment(timeRange[0], 'HH:mm:ss').minute() + 1, Minutes.length);
+        }
+        return minArr;
+    };
+
     const disableHours = (): Array<number> => {
         const Hours = Array.from(Array(24), (v, k) => k);
         let hoursArr: Array<number> = [];
@@ -116,10 +138,13 @@ const SettingsMeetingForm: React.ComponentType<SettingsMeetingFormProps> = (prop
         let minArr: Array<number> = Minutes;
         if(h > moment(timeRange[0], 'HH:mm:ss').hour() && h < moment(timeRange[1], 'HH:mm:ss').hour()) {
             minArr = [];
+        }else if(h === moment(timeRange[0], 'HH:mm:ss').hour() && h === moment(timeRange[1], 'HH:mm:ss').hour()){
+            Minutes.splice(moment(timeRange[0], 'HH:mm:ss').minute(), moment(timeRange[1], 'HH:mm:ss').minute() - moment(timeRange[0], 'HH:mm:ss').minute() + 1);
+            minArr = Minutes;
         }else if (h === moment(timeRange[0], 'HH:mm:ss').hour()) {
             minArr = Minutes.slice(0, moment(timeRange[0], 'HH:mm:ss').minute());
         }else if (h === moment(timeRange[1], 'HH:mm:ss').hour()) {
-            minArr = Minutes.slice(moment(timeRange[1], 'HH:mm:ss').minute() + 1, Minutes.length - 1);
+            minArr = Minutes.slice(moment(timeRange[1], 'HH:mm:ss').minute() + 1, 60);
         }
         return minArr;
     };
@@ -208,6 +233,7 @@ const SettingsMeetingForm: React.ComponentType<SettingsMeetingFormProps> = (prop
                                 <Checkbox value="10">10分钟</Checkbox>
                                 <Checkbox value="15">15分钟</Checkbox>
                                 <Checkbox value="20">20分钟</Checkbox>
+                                <Checkbox value="30">30分钟</Checkbox>
                             </Checkbox.Group>
                         )}
                     </Form.Item>
@@ -232,16 +258,14 @@ const SettingsMeetingForm: React.ComponentType<SettingsMeetingFormProps> = (prop
                             </Radio.Group>
                         )}
                     </Form.Item>
-                    <Form.Item label="提前签到">
+                    <Form.Item label="开始签到">
                         {getFieldDecorator('signin_time', {
-                            initialValue: (data && data.checkin_ahead_minute && data.checkin_ahead_minute.toString()) || '10'
+                            initialValue: (data && data.checkin_ahead_minute && moment(data.checkin_ahead_minute, 'HH:mm') || null)
                         })(
-                            <Radio.Group>
-                                <Radio value="10">10分钟</Radio>
-                                <Radio value="15">15分钟</Radio>
-                                <Radio value="20">20分钟</Radio>
-                                <Radio value="30">30分钟</Radio>
-                            </Radio.Group>
+                            <TimePicker
+                                disabledHours={disableHours1}
+                                disabledMinutes={disableMinutes1}
+                                format={"HH:mm"}/>
                         )}
                     </Form.Item>
                     <Form.Item label="结束签到">

@@ -41,14 +41,14 @@ const AccessManageEditor: React.ComponentType<AccessManageEditorProps> = (props:
                     name: values.name,
                     mac: values.mac,
                     groupId: values.group.join(','),
-                    position_id: values.room,
-                    position_name: '',
+                    positionId: values.room,
+                    positionName: '',
                 }, (res: any) => {
                     props.close();
                     success('添加设备成功');
                 }, (err: any) => {
                     error(err && err.message ? err.message : err.toString());
-                })
+                });
             }
         });
     };

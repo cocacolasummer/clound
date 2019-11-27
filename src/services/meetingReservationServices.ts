@@ -156,6 +156,18 @@ class MeetingReservationServices {
         });
     }
 
+    finishMeeting(id: string, success: any, error: any): void {
+        axios.put(`/meetingcloud/apps/meeting/api/v1/stopMeeting/${id}`, {}).then((res) => {
+            if (res.data.code) {
+                error(res.data);
+            } else {
+                success(res.data);
+            }
+        }).catch((err) => {
+            error(err);
+        });
+    }
+
     passMeeting(id: string, params: any, success: any, error: any): void {
         axios.put(`/meetingcloud/apps/meeting/api/v1/audit/meeting/${id}`, {...params}).then((res) => {
             if (res.data.code) {

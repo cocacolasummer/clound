@@ -39,19 +39,20 @@ const AccessManagePage: React.ComponentType = () => {
         listSearch
     } = useMappedState(mapListState);
     useEffect(() => {
-        _accessServices.getGroupList({
-            page: listSearch ? 1 : listPage,
-            limit: listLimit,
-            search: listSearch
-        }, (data) => {
+        _accessServices.deviceList({
+            page: listPage,
+            pagesize: listLimit,
+            name: listSearch,
+            groupId: '',
+        }, (data: any) => {
             dispatch({
                 type: 'change accessManage list',
-                list: data.list,
-                page: parseInt(String(data.page)),
-                total: parseInt(String(data.total)),
-                limit: parseInt(String(data.limit))
+                list: data.data.list,
+                page: listPage,
+                total: data.data.count,
+                limit: listLimit
             });
-        }, (err) => {
+        }, (err: any) => {
             console.log(err);
         });
     }, [listPage, listLimit, listSearch, dispatch]);

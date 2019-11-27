@@ -54,6 +54,17 @@ const MeetingTable = () => {
             error(err.toString());
         });
     };
+    const finishMeeting = (id: string) => {
+        _meetingResServices.finishMeeting(id, (res: any) => {
+            success(`结束会议${res.message}`);
+            dispatch({
+                type: 'change meetingList total',
+                total: total + 1
+            });
+        }, (err: any) => {
+            error(err.message ? err.message : err.toString());
+        });
+    };
     const passMeeting = (id: string, pass: number) => {
         const params = {
             pass: pass
@@ -251,6 +262,16 @@ const MeetingTable = () => {
                                     });
                                 }}
                                 style={{marginRight: 5}} size={"small"}>重新发起</Button>
+                    );
+                }
+                if (loginUserId === item.creator && item.status === '4' && kind === '1') {
+                    reCreate = (
+                        <Button type={"danger"} onClick={(e): void => {
+                            e.stopPropagation();
+                            waringConfirm('警告', `确定结束会议<${item.subject}>吗？`, () => {
+                                finishMeeting(item.id);
+                            });
+                        }} size={"small"}>结束会议</Button>
                     );
                 }
 

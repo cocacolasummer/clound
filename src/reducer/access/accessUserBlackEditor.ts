@@ -3,6 +3,8 @@ import {AccessUserBlackEditorAction, AccessUserBlackEditorState} from '@/store/a
 const initialState: AccessUserBlackEditorState = {
     mount: false,
     show: false,
+    userList: [],
+    devices: [],
 };
 
 export default function reducer(
@@ -19,6 +21,18 @@ export default function reducer(
                 ...state,
                 mount: true,
                 show: true
+            };
+        }
+        case "change accessUserBlackEditor userList": {
+            return {
+                ...state,
+                userList: action.userList
+            };
+        }
+        case "change accessUserBlackEditor devices": {
+            return {
+                ...state,
+                devices: action.devices
             };
         }
         case "change accessUserBlackEditor hide": {

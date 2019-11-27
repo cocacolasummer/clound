@@ -73,7 +73,7 @@ const TimePickerRange: React.FC<TimPickerProps> = (props: TimPickerProps, ref) =
     const disStartHouse = () => {
         if (endTime) {
             const h = endTime.hour();
-            return Hours.slice(h, Hours.length);
+            return Hours.slice(h + 1, Hours.length);
         }
         return [];
     };

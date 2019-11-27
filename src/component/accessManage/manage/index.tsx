@@ -68,7 +68,6 @@ const AccessManage: React.ComponentType = () => {
                         <ThemeOrange>
                             <Button>紧急一键开启</Button>
                         </ThemeOrange>
-                        <Button type={"danger"}>紧急一键关闭</Button>
                         <Button type={"primary"} style={{marginLeft: 15}}
                                 onClick={(): void => {
                                     dispatch({

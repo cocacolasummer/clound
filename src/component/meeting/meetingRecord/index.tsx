@@ -109,7 +109,7 @@ const MeetingRecord = (props: MeetingListProps) => {
                     type: 'change meetingRecord data',
                     list: res.data.list,
                     total: parseInt(res.data.count),
-                    page: page,
+                    page: 1,
                     limit: limit
                 });
             }
@@ -117,7 +117,7 @@ const MeetingRecord = (props: MeetingListProps) => {
         }, (err: any) => {
             error(err && err.message ? err.message : err.toString());
         });
-    }, [search, kind, userKey, departmentKey, status, date, total, dispatch, props.type, limit, page]);
+    }, [search, kind, userKey, departmentKey, status, date, dispatch, props.type]);
     useEffect(() => {
         setLoading(true);
         const meetingType = props.type === 'normal' ? 0 : 1;
@@ -146,7 +146,7 @@ const MeetingRecord = (props: MeetingListProps) => {
         }, (err: any) => {
             error(err && err.message ? err.message : err.toString());
         });
-    }, [page, limit, dispatch, props.type, search, kind, status, date, departmentKey, userKey]);
+    }, [page, limit, dispatch, props.type, status, date]);
     return (
         <ShowListWrapper>
             <Spin spinning={loading}>

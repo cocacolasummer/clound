@@ -94,6 +94,20 @@ margin-right: 5px;
 const RoomAddressWrapper = styled.div`
   margin-left: 20px;
   line-height: 49px;
+  height: 50px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: calc(100% - 250px);
+  ::-webkit-scrollbar-track { background-color: #ccc;  }
+::-webkit-scrollbar {  width: 0px;height:8px;  background-color: rgba(0,0,0,0.1);border-radius: 5px;  }
+::-webkit-scrollbar-thumb { /* */background: rgba(0,0,0,0.1);border-radius: 5px; }
+::-webkit-scrollbar-corner{ background-color: rgba(0,0,0,0.1);}
+    div{
+        height: 50px;
+        white-space: nowrap;
+        overflow-y: hidden;
+        overflow-x: auto;
+    }
     label {
     border: none !important;
     box-shadow: none !important;

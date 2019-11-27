@@ -2,7 +2,7 @@ import axios from 'axios';
 import {ListObjects} from '@/store/access/userType';
 import {DataObjects} from '@/store/access/accessPassRecord';
 import {ListObjects as AccessPassRecordByRoom} from '@/store/access/accessPassRecordByRoom';
-
+import {objDeepCopy, translateDataToTreeUserid} from '@/util/zTreeDataToTree';
 axios.defaults.withCredentials = true;
 
 class AccessServices {
@@ -91,6 +91,149 @@ class AccessServices {
 
     deviceAdd(data: any, success: (data: any) => void, error: (err: Error) => void): void {
         axios.post(`/meetingcloud/apps/accesscontrol/api/v1/deviceAdd`, data).then((res) => {
+            if (res.data.code) {
+                error(res.data);
+            } else {
+                success(res.data);
+            }
+        }).catch((err) => {
+            error(err);
+        });
+    }
+
+    deviceList(params: any, successCallBack: any, errorCallback: any): void {
+        axios.get(`/meetingcloud/apps/accesscontrol/api/v1/deviceList`, {
+            params: {
+                ...params
+            }
+        })
+            .then(function(response) {
+                if (!response.data.code) {
+                    successCallBack(response.data);
+                } else {
+                    errorCallback(response.data);
+                }
+            })
+            .catch(function(error) {
+                errorCallback(error);
+            });
+    }
+
+    deviceDel(data: any, success: (data: any) => void, error: (err: Error) => void): void {
+        axios.post(`/meetingcloud/apps/accesscontrol/api/v1/deviceDel`, data).then((res) => {
+            if (res.data.code) {
+                error(res.data);
+            } else {
+                success(res.data);
+            }
+        }).catch((err) => {
+            error(err);
+        });
+    }
+
+    groupAdd(data: any, success: (data: any) => void, error: (err: Error) => void): void {
+        axios.post(`/meetingcloud/apps/accesscontrol/api/v1/groupAdd`, data).then((res) => {
+            if (res.data.code) {
+                error(res.data);
+            } else {
+                success(res.data);
+            }
+        }).catch((err) => {
+            error(err);
+        });
+    }
+
+    groupIndex(params: any, successCallBack: any, errorCallback: any): void {
+        axios.get(`/meetingcloud/apps/accesscontrol/api/v1/groupIndex`, {
+            params: {
+                ...params
+            }
+        })
+            .then(function(response) {
+                if (!response.data.code) {
+                    successCallBack(response.data);
+                } else {
+                    errorCallback(response.data);
+                }
+            })
+            .catch(function(error) {
+                errorCallback(error);
+            });
+    }
+
+    groupDel(data: any, success: (data: any) => void, error: (err: Error) => void): void {
+        axios.post(`/meetingcloud/apps/accesscontrol/api/v1/groupDel`, data).then((res) => {
+            if (res.data.code) {
+                error(res.data);
+            } else {
+                success(res.data);
+            }
+        }).catch((err) => {
+            error(err);
+        });
+    }
+
+    allDevice(successCallBack: any, errorCallback: any): void {
+        axios.get(`/meetingcloud/apps/accesscontrol/api/v1/allDevice`)
+            .then(function(response) {
+                if (!response.data.code) {
+                    successCallBack(response.data);
+                } else {
+                    errorCallback(response.data);
+                }
+            })
+            .catch(function(error) {
+                errorCallback(error);
+            });
+    }
+
+    getResUserList(successCallBack: any, errorCallback: any): void {
+        axios.get(`/meetingcloud/apps/department/api/v1/userTree`)
+            .then(function(response: any) {
+                if (!response.data.code) {
+                    successCallBack(translateDataToTreeUserid(objDeepCopy(response.data.data)));
+                } else {
+                    errorCallback(response.message);
+                }
+            })
+            .catch(function(error) {
+                errorCallback(error);
+            });
+    }
+
+    
+    addBlack(data: any, success: (data: any) => void, error: (err: Error) => void): void {
+        axios.post(`/meetingcloud/apps/accesscontrol/api/v1/addBlack`, data).then((res) => {
+            if (res.data.code) {
+                error(res.data);
+            } else {
+                success(res.data);
+            }
+        }).catch((err) => {
+            error(err);
+        });
+    }
+
+    blackList(params: any, successCallBack: any, errorCallback: any): void {
+        axios.get(`/meetingcloud/apps/accesscontrol/api/v1/blackList`, {
+            params: {
+                ...params
+            }
+        })
+            .then(function(response) {
+                if (!response.data.code) {
+                    successCallBack(response.data);
+                } else {
+                    errorCallback(response.data);
+                }
+            })
+            .catch(function(error) {
+                errorCallback(error);
+            });
+    }
+
+    delBlack(data: any, success: (data: any) => void, error: (err: Error) => void): void {
+        axios.post(`/meetingcloud/apps/accesscontrol/api/v1/delBlack`, data).then((res) => {
             if (res.data.code) {
                 error(res.data);
             } else {

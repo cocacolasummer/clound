@@ -148,7 +148,7 @@ function MeetingNormalEditor(props: EditorData): any {
         settingsFormWrapper.validateFields((err: any, values: any) => {
             if (!err) {
                 data['checkin'] = values.meeting_signin;
-                data['checkinAheadMinute'] = values.signin_time;
+                data['checkinAheadMinute'] = values.signin_time ? values.signin_time.format('HH:mm') : '';
                 data['smsTime'] = values.begin_remind.join(',');
                 data['smsType'] = values.smsType.join(',');
                 data['endSmsTime'] = values.end_remind.join(',');

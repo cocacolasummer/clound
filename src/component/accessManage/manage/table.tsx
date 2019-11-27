@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react';
-import {Button, Table, Switch, Popconfirm} from 'antd';
+import {Button, Table, Switch} from 'antd';
 import {TableRowSelection} from "antd/lib/table";
 import {CSSTransition} from "react-transition-group";
 import {ContentWrapper} from "@/component/meeting/meetingList/ui";
@@ -9,6 +9,9 @@ import {useDispatch, useMappedState} from 'redux-react-hook';
 import {ListObjects} from '@/store/access/accessManage';
 
 import {IState} from '@/store';
+import AccessServices from '@/services/accessServices';
+const _accessServices = new AccessServices();
+import { success, error, waringConfirm, } from '@/util/golbalModalMessage';
 
 const mapState = (state: IState): {
     list: ListObjects[] | undefined;
@@ -18,6 +21,14 @@ const mapState = (state: IState): {
         list: state.AccessManage.list,
         selectRows: state.AccessManage.selectRows
     };
+};
+
+const deldevices = (id: string) => {
+    _accessServices.deviceDel({ ids: id }, (res: any) => {
+        success(`删除设备成功！`);
+    }, (err: any) => {
+        error(err.message.toString());
+    });
 };
 
 const GroupTable: React.ComponentType = () => {
@@ -50,13 +61,13 @@ const GroupTable: React.ComponentType = () => {
         },
         {
             title: '设备组',
-            dataIndex: 'groupName',
-            key: 'groupName'
+            dataIndex: 'group_name',
+            key: 'group_name'
         },
         {
-            title: '通行类型',
-            dataIndex: 'passName',
-            key: 'passName'
+            title: '状态',
+            dataIndex: 'online_status',
+            key: 'online_status'
         },
         {
             title: '操作',
@@ -71,9 +82,11 @@ const GroupTable: React.ComponentType = () => {
                                 editorType: 'edit'
                             });
                         }} type={"primary"} key={index}>编辑</Button>
-                        <Popconfirm title={`确定删除“${record.name}”吗`} okText="确定" cancelText="取消">
-                            <Button size={"small"} type={"danger"}>删除</Button>
-                        </Popconfirm>
+                        <Button type={"danger"} onClick={(): void => {
+                            waringConfirm('警告', `确定删除${record.name}设备吗？`, () => {
+                                deldevices(record.id);
+                            });
+                        }} size={"small"}>删除</Button>
                        <Switch style={{marginLeft: 10}}/>
                     </span>
                 );
